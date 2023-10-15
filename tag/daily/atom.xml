@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://paperwings2019.github.io</id>
+    <title>PaperWings Blog • Posts by &#34;daily&#34; tag</title>
+    <link href="https://paperwings2019.github.io" />
+    <updated>2023-10-15T02:22:03.000Z</updated>
+    <category term="Daily" />
+    <entry>
+        <id>https://paperwings2019.github.io/2023/10/15/123321/</id>
+        <title>My first Post</title>
+        <link rel="alternate" href="https://paperwings2019.github.io/2023/10/15/123321/"/>
+        <content type="html"></content>
+        <category term="Daily" />
+        <updated>2023-10-15T02:22:03.000Z</updated>
+    </entry>
+</feed>
