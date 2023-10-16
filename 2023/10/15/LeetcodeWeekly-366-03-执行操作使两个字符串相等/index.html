@@ -144,7 +144,7 @@
 <p><strong><u><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1e84y117R9/?vd_source=ea0f2733af6b9f96a1a2ad6af5f1343a">解法思路来自 @灵茶山艾府 大佬</a></u></strong></p>
 <h2 id="解法一on2时间动态规划"><a class="markdownIt-Anchor" href="#解法一on2时间动态规划">#</a> 解法一：O (n^2) 时间动态规划</h2>
 <h3 id="如何直接判断能否使两个字符串相等"><a class="markdownIt-Anchor" href="#如何直接判断能否使两个字符串相等">#</a> 如何直接判断能否使两个字符串相等？</h3>
-<p>主要看 s1（或者 s2 也可以）中 **“1” 的数量的奇偶性<strong>是否与 s2（或者 s1）中</strong> “1” 的数量的奇偶性 ** 相同。原因是，第一种操作与第二种操作都不会改变 “1” 的数量的奇偶性。第一种操作和第二种操作同时翻转两个位置，要么反转一个 1 一个 0（奇偶性不变），要么反转两个 1 或者两个 0（“1” 的数量 + 2 或 - 2，奇偶性仍不变）。因此若 s1 和 s2 中 “1” 的数量不相同，可以直接返回 - 1.</p>
+<p>主要看 s1（或者 s2 也可以）中 **“1” 的数量的奇偶性是否与 s2（或者 s1）中 “1” 的数量的奇偶性 ** 相同。原因是，第一种操作与第二种操作都不会改变 “1” 的数量的奇偶性。第一种操作和第二种操作同时翻转两个位置，要么反转一个 1 一个 0（奇偶性不变），要么反转两个 1 或者两个 0（“1” 的数量 + 2 或 - 2，奇偶性仍不变）。因此若 s1 和 s2 中 “1” 的数量不相同，可以直接返回 - 1.</p>
 <h3 id="dp数组的意义递推公式初始化"><a class="markdownIt-Anchor" href="#dp数组的意义递推公式初始化">#</a> DP 数组的意义，递推公式，初始化</h3>
 <p>三个参数：dp (i, j, preRev)，代表<strong>在处理前 i 个位置后，以及 j 个剩下的免费翻转机会，以及根据 preRev 的真假</strong>（前一个位置是否选择第二种方法进行翻转）的状态下，最小的花费。这是因为，如果在处理先前的字符串时选择了第一种方法，相当于我们在处理之后的字符串时获得了免费的翻转机会。如果前一个位置选择了第二种操作，那么本位需要当作已经被翻转（即如果本来 s1 [2]==‘1’，但 s1 [1] 使用了第二种操作使得 s1 [1] == s2 [1]，那么 s1 [2] 应该被当做 0 来处理）。</p>
 <p>与一般的使用迭代的方法遍历 dp 数组不同，这里使用递归 + cache 的方法来遍历。假如 (s1 [i] == s2 [i]) == <strong>not preRev</strong>，那么 dp (i, j, preRev) = dp (i-1, j, False)。 假如不同，首先分别计算第一种操作和第二种操作后的花费，取最小值。即 dp (i, j, preRev) = min ( dp (i-1, j+1, False) + x, dp (i-1, j, True) + 1 )。之后，假如 j 不为 0，继续计算免费翻转后的花费，即 dp (i, j, preRev) = min (dp (i, j, preRev), dp (i-1, j-1, False))，注意此处等号右边的 dp (i, j, preRev) 已经是第一种和第二种操作取最小值后的值。</p>
@@ -156,7 +156,7 @@
 <h2 id="解法二on时间动态规划"><a class="markdownIt-Anchor" href="#解法二on时间动态规划">#</a> 解法二：O (n) 时间动态规划</h2>
 <p>单次遍历 s1，记录下与 s2 每个位置上不同的下标，并存储在一个新数组 p 中。</p>
 <h3 id="如何直接判断能否使两个字符串相等-2"><a class="markdownIt-Anchor" href="#如何直接判断能否使两个字符串相等-2">#</a> 如何直接判断能否使两个字符串相等？</h3>
-<p>同上，假如 p 的长度为奇数，那么可以直接返回 - 1。</p>
+<p>两种操作每次都需要正好对两个数操作，则假如 p 的长度为奇数，那么可以直接返回 - 1。</p>
 <h3 id="动态规划意义及递推公式初始化"><a class="markdownIt-Anchor" href="#动态规划意义及递推公式初始化">#</a> 动态规划意义及递推公式，初始化</h3>
 <p>设 f (i) 为处理数组 p 前 i 个元素所需要花费的时间</p>
 <p>来看如何处理当前位置为 i 的元素：对于第一种操作，花费可看作是 x/2，即 f (i) = f (i-1) + x/2。对于第二种操作，需要看上一个位置与该位置的 “距离”，连续翻转之间的数，即 f (i) = f (i-2) + p [i-1] - p [i]。</p>
@@ -165,6 +165,9 @@
 <p>对于每个 f (i)，我们只需要知道 f (i-1) 和 f (i-2)，因此我们需要维护两个状态（滚动数组），最后返回其中第一个状态。时间复杂度 O (n)，空间复杂度 O (n)。</p>
 <h3 id="python代码实现-2"><a class="markdownIt-Anchor" href="#python代码实现-2">#</a> Python 代码实现</h3>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">minOperations</span>(<span class="params">self, s1: <span class="built_in">str</span>, s2: <span class="built_in">str</span>, x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="keyword">if</span> s1 == s2: <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        p = [i <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(s1)) <span class="keyword">if</span> s1[i] != s2[i]]</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(p) % <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        f0, f1 = <span class="number">0</span>, x / <span class="number">2</span></span><br><span class="line">        <span class="keyword">for</span> i, j <span class="keyword">in</span> pairwise(p):</span><br><span class="line">            f0, f1 = f1, <span class="built_in">min</span>(f1 + x / <span class="number">2</span>, f0 + j - i)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">int</span>(f1)</span><br></pre></td></tr></table></figure>
+<h1 id="大佬留下的思考题"><a class="markdownIt-Anchor" href="#大佬留下的思考题">#</a> 大佬留下的思考题</h1>
+<p><strong>如果第一种操作限制 | i-j|&gt;=k 呢？</strong></p>
+<p>可以多维护一个整数参数 t，记录下一个可以进行免费翻转的下标位置，即如果使用第一种操作，那么 t 更新为 i+k。在判断是否能免费翻转时，除了 j 还需要看当前 i 是否大于等于 t，如果都满足的话才能免费翻转。</p>
 
   </div>
   
