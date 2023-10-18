@@ -140,6 +140,7 @@
 <li><code>1 &lt;= nums[i] &lt;= 109</code></li>
 </ul>
 <h1 id="解题思路"><a class="markdownIt-Anchor" href="#解题思路">#</a> 解题思路</h1>
+<p><strong><u><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1e84y117R9/?vd_source=ea0f2733af6b9f96a1a2ad6af5f1343a">解法思路来自 @灵茶山艾府 大佬</a></u></strong></p>
 <p>由于无论是 AND 还是 OR，都不会改变两个数都是 1 或者 0 的结果，因此<strong>题中操作等价于交换两数的 1 和 0，其中 OR 操作后的数会更大，而 AND 操作后的数会更小，并且增大和减小的值相等。</strong></p>
 <p>由于如果把一个数平均分配给两数的平方和一定小于一个数本身的平方，我们的目的是要将尽可能多的 1 转移到一个数上，并执行 k 次这样的操作。</p>
 <p>先遍历整个 nums，找出每一位上有多少个 1，最多 30 位（10<sup>9 小于 2</sup>30），存储在 cnt 里。之后遍历 cnt，只要 cnt 每一位上的数还不为 0，就使临时变量 sum 加上 2^i，cnt 对应位减 1，遍历结束后加在最终的 res 里。执行 k 次以上操作，返回 res。</p>
@@ -154,6 +155,8 @@
       <a id="older" class="blog-nav" href="/2023/10/15/LeetcodeWeekly-366-03-%E6%89%A7%E8%A1%8C%E6%93%8D%E4%BD%9C%E4%BD%BF%E4%B8%A4%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9B%B8%E7%AD%89/">OLDER&nbsp;&gt;</a>
       
         
+          <a id="newer" class="blog-nav" href="/2023/10/18/Leetcode-2516-%E6%AF%8F%E7%A7%8D%E5%AD%97%E7%AC%A6%E8%87%B3%E5%B0%91%E5%8F%96-K-%E4%B8%AA/">&lt;&nbsp;NEWER</a>
+          
             
 </div>
         <div class="footer">
