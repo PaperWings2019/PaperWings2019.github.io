@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="PaperWings" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      C语言常见面试/笔试问题集合 
+      
+      
+    
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:400,400italic,600|Roboto+Mono" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+
+
+  
+
+  
+    
+<link rel="stylesheet" href="/css/post.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <a href="/">LEEDOM</a>
+</div>
+
+
+      <p class="links">
+  
+    <a title="archives" target="" href="/archives/">
+      <i class="iconfont icon-bookmark"></i>
+    </a>
+  
+    <a title="github" target="_blank" href="https://github.com/leedom92/hexo-theme-leedom">
+      <i class="iconfont icon-github"></i>
+    </a>
+  
+    <a title="email" target="" href="">
+      <i class="iconfont icon-envelope"></i>
+    </a>
+  
+    <a title="facebook" target="" href="">
+      <i class="iconfont icon-facebooksquare"></i>
+    </a>
+  
+    <a title="twitter" target="" href="">
+      <i class="iconfont icon-twitter"></i>
+    </a>
+  
+    <a title="wechat" target="" href="">
+      <i class="iconfont icon-wechat"></i>
+    </a>
+  
+    <a title="weibo" target="" href="">
+      <i class="iconfont icon-weibo"></i>
+    </a>
+  
+    <a title="rss" target="_blank" href="/atom.xml">
+      <i class="iconfont icon-rss"></i>
+    </a>
+  
+</p>
+
+
+      <div class="main">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+
+<div class="post">
+  <h3 class="date">
+    Oct 24, 2023
+  </h3>
+  <h1>
+    C语言常见面试/笔试问题集合
+  </h1>
+  <div class="content markdown-body">
+    <h1 id="概念问题"><a class="markdownIt-Anchor" href="#概念问题">#</a> 概念问题</h1>
+<h2 id="static关键字的作用原理"><a class="markdownIt-Anchor" href="#static关键字的作用原理">#</a> static 关键字的作用 / 原理</h2>
+<p>被 static 修饰的变量或者函数会被放入静态存储区。根据上下文，static 有不同的作用和意义</p>
+<ul>
+<li>在函数体内部声明的 static 修饰的变量将被作为静态局部变量。其作用域或者可见范围仍被限制在函数内，即只在函数运行时才能进行访问，但其初始化将在整个程序刚开始运行时就进行，有且仅有一次。这意味着无论多少次调用该函数，该 static 变量不会重新被初始化，而是会继续保持在上一次的值。其寿命等于程序运行寿命。</li>
+<li>一般被 static 修饰的全局变量仅能在一个模块（文件）内可见，而不能被其他模块访问。全局变量仍然被放入静态区，但是可见范围发生了以上变化。</li>
+<li>被 static 修饰的函数声明表示该函数只在当前模块可见。</li>
+</ul>
+<h2 id="内存管理问题"><a class="markdownIt-Anchor" href="#内存管理问题">#</a> 内存管理问题</h2>
+<h3 id="内存分配函数"><a class="markdownIt-Anchor" href="#内存分配函数">#</a> 内存分配函数</h3>
+<h4 id="解释malloc-calloc-realloc的区别和用法"><a class="markdownIt-Anchor" href="#解释malloc-calloc-realloc的区别和用法">#</a> 解释 <code>malloc</code> 、 <code>calloc</code> 、 <code>realloc</code>  的区别和用法</h4>
+<p>malloc 用于在<strong>堆</strong>（heap）上动态分配一个指定大小和类型的内存块，但不会初始化内存中的值</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *arr = (<span class="type">int</span> *)<span class="built_in">malloc</span>(<span class="number">10</span> * <span class="keyword">sizeof</span>(<span class="type">int</span>)); <span class="comment">// 分配一个大小为10的整型数组,但未初始化</span></span><br></pre></td></tr></table></figure>
+<p>calloc 用于在堆上动态分配一个指定大小和类型的内存块，并将内存中的值初始化为 0</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *arr = (<span class="type">int</span> *)<span class="built_in">calloc</span>(<span class="number">10</span>, <span class="keyword">sizeof</span>(<span class="type">int</span>)); <span class="comment">// 分配一个大小为10的整型数组，初始化各元素为0</span></span><br></pre></td></tr></table></figure>
+<p>realloc 用于将 malloc 或者 calloc 分配的内存扩大或者缩小</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *arr = (<span class="type">int</span> *)<span class="built_in">malloc</span>(<span class="number">10</span> * <span class="keyword">sizeof</span>(<span class="type">int</span>)); <span class="comment">// 分配一个大小为10的整型数组,但未初始化</span></span><br><span class="line"><span class="built_in">realloc</span>(arr, <span class="number">12</span>);</span><br><span class="line"><span class="built_in">realloc</span>(arr, <span class="number">6</span>);</span><br></pre></td></tr></table></figure>
+<p>注意，假如 realloc 后无法在原地扩展，则会在堆 heap 中另外寻找一块合适的内存块，并自动释放之前的内存</p>
+<h4 id="什么是内存泄漏memory-leak和悬挂指针dangling-pointer如何避免内存泄漏和悬挂指针"><a class="markdownIt-Anchor" href="#什么是内存泄漏memory-leak和悬挂指针dangling-pointer如何避免内存泄漏和悬挂指针">#</a> 什么是内存泄漏（Memory Leak）和悬挂指针（Dangling Pointer）？如何避免内存泄漏和悬挂指针？</h4>
+<p>内存泄漏指程序员未能成功释放动态分配（如 malloc，calloc，realloc）的内存，导致分配的内存一直被占用造成浪费，从而导致程序运行变慢或崩溃。悬挂指针指当某指针所指的内存被释放后，该指针仍然指向原内存地址，再次访问会出现不可预知的行为，变成悬挂指针。悬挂指针也有可能因为存储了局部变量的地址而造成，如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>* <span class="title function_">creatInt</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="type">int</span> *x = (<span class="type">int</span>*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="type">int</span>));</span><br><span class="line">	<span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">int</span> *ptr = creatInt(); <span class="comment">// ptr存储局部变量的地址，是悬挂指针</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了避免内存泄漏，应该在分配的内存使用完毕后及时使用 free 函数释放。注意不要重复释放内存，并在释放内存后及时将 NULL 赋值给原指针，避免出现悬挂指针。也可以使用智能指针，程序会自动释放内存。</p>
+<h3 id="数组和指针"><a class="markdownIt-Anchor" href="#数组和指针">#</a> 数组和指针</h3>
+<h4 id="指针和数组有什么区别如何将指针和数组相互转换"><a class="markdownIt-Anchor" href="#指针和数组有什么区别如何将指针和数组相互转换">#</a> 指针和数组有什么区别？如何将指针和数组相互转换？</h4>
+<ul>
+<li>定义和使用</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a[<span class="number">5</span>]; <span class="comment">// 数组，需要确定数组的大小，元素的类型，元素的类型必须相同，在内存中以连续地址分布</span></span><br><span class="line"><span class="type">int</span> *p; <span class="comment">// 指针，需要指定指向数据的类型</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>内存中的表示</li>
+</ul>
+<p>数组在内存中连续分布，有固定的大小，每个元素占据相应的内存大小</p>
+<p>指针在内存中表示所指向的量的地址，自己本身也有一个地址。在不同的操作系统中存储的地址或者本身的地址都可能不同。</p>
+<ul>
+<li>相互转换</li>
+</ul>
+<p>定义的数组名称其实就是一个指针，指向所被分配的内存空间中的首地址。作为函数参数时，两者都是等效的，如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">func</span><span class="params">(<span class="type">int</span> arr[])</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">func</span><span class="params">(<span class="type">int</span> *arr)</span>;</span><br></pre></td></tr></table></figure>
+<p>无论使用哪一类参数传入，都需要注意数组的上限，注意不能越界，否则会发生意外。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> arr[<span class="number">5</span>];</span><br><span class="line"><span class="type">int</span> *ptr = arr;</span><br><span class="line">ptr[<span class="number">2</span>] = <span class="number">10</span>; <span class="comment">// 通过指针ptr访问arr[2]</span></span><br></pre></td></tr></table></figure>
+<h3 id="数组指针类型函数定义问题"><a class="markdownIt-Anchor" href="#数组指针类型函数定义问题">#</a> 数组，指针，类型，函数定义问题</h3>
+<p>一个大小为 10 的数组，元素为指向整型的指针：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>	*a[<span class="number">10</span>];</span><br></pre></td></tr></table></figure>
+<p>一个指向大小为 10，元素为整型的数组的指针：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> (*a)[<span class="number">10</span>];</span><br></pre></td></tr></table></figure>
+<p>一个函数指针，函数接受一个整型参数并返回一个整型</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> (*a)(<span class="type">int</span>);</span><br></pre></td></tr></table></figure>
+<p>一个大小为 10，元素是指向函数的指针的数组，这个函数接受整型参数并返回一个整型</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> (*a[<span class="number">10</span>])(<span class="type">int</span>);</span><br></pre></td></tr></table></figure>
+<p>一个指针，指向一个大小为 10 的数组，数组的元素是指向函数的指针，这个函数接受整型指针参数并返回一个整型指针</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="type">int</span>*) *(*a)[<span class="number">10</span>](<span class="type">int</span>*);</span><br></pre></td></tr></table></figure>
+<h1 id="代码结果问题"><a class="markdownIt-Anchor" href="#代码结果问题">#</a> 代码结果问题</h1>
+
+  </div>
+  
+    
+      <a id="older" class="blog-nav" href="/2023/10/18/Leetcode-2516-%E6%AF%8F%E7%A7%8D%E5%AD%97%E7%AC%A6%E8%87%B3%E5%B0%91%E5%8F%96-K-%E4%B8%AA/">OLDER&nbsp;&gt;</a>
+      
+        
+            
+</div>
+        <div class="footer">
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/leedom92/hexo-theme-leedom">Copyright © Leedom 2021</a>
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/leedom92/hexo-theme-leedom">Theme by Leedom | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-box">
+        <div class="search-title">
+          <!-- <span class="search-icon-input">
+            <a href="javascript: void(0)">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </span> -->
+          
+            <input type="text" class="search-input" id="search-input" placeholder="$ grep...">
+          
+          <span class="search-close-icon" id="search-close-icon">
+            <a href="javascript: void(0)">
+              <i class="iconfont icon-close"></i>
+            </a>
+          </span>
+        </div>
+        <div class="search-result" id="search-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    // inputArea.onclick = function() {
+    //   getSearchFile()
+    //   this.onclick = null
+    // }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        inputArea.focus()
+        getSearchFile()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'><span></ul>";
+      // $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'><h2>" + orig_data_title + "</h2></a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<h3 class=\"search-result-abstract\">" + match_content + "...</h3>"
+                }
+                str += "<hr></li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/leedom92/hexo-theme-leedom#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  </body>
+</html>
