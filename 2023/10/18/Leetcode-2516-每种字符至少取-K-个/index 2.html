@@ -11,7 +11,7 @@
   
   <title>
     
-      Linux学习笔记 
+      Leetcode-2516-每种字符至少取 K 个 
       
       
     
@@ -115,86 +115,45 @@
 
 <div class="post">
   <h3 class="date">
-    Mar 10, 2024
+    Oct 18, 2023
   </h3>
   <h1>
-    Linux学习笔记
+    Leetcode-2516-每种字符至少取 K 个
   </h1>
   <div class="content markdown-body">
-    <p>PS：该学习笔记资源来自于<a target="_blank" rel="noopener" href="https://linux.vbird.org/">鸟叔的 linux 私房菜</a>，感谢大佬～</p>
-<p>PPS：由于在学习时已经有了一定计算机基础，于是直接从第二章开始做笔记！</p>
-<h1 id="主机结构与磁盘分区"><a class="markdownIt-Anchor" href="#主机结构与磁盘分区">#</a> 主机结构与磁盘分区</h1>
-<h2 id="使用合适的硬件搭建linux系统"><a class="markdownIt-Anchor" href="#使用合适的硬件搭建linux系统">#</a> 使用合适的硬件搭建 Linux 系统</h2>
-<p>在搭建 Linux 系统时，硬件的选配也很重要，在购买之前一定要查看其对于 Linux 的支持性。针对不同的需求，如办公或者是作为服务器，也需要选配不同等级的硬件，如 CPU，内存，网卡，磁盘等。</p>
-<h2 id="磁盘分区"><a class="markdownIt-Anchor" href="#磁盘分区">#</a> 磁盘分区</h2>
-<p>** 在 Linux 中，设备在文件系统中就是一个文件夹或者文件。** 对于不同类型的存储装置 / 设备，Linux 会按照以下的规则进行命名：</p>
-<table>
-<thead>
-<tr>
-<th>裝置</th>
-<th>裝置在 Linux 內的檔名</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SCSI/SATA/USB 硬碟機</td>
-<td>/dev/sd[a-p]</td>
-</tr>
-<tr>
-<td>USB 快閃碟</td>
-<td>/dev/sd [a-p] (與 SATA 相同)</td>
-</tr>
-<tr>
-<td>VirtI/O 界面</td>
-<td>/dev/vd [a-p] (用於虛擬機器內)</td>
-</tr>
-<tr>
-<td>軟碟機</td>
-<td>/dev/fd[0-1]</td>
-</tr>
-<tr>
-<td>印表機</td>
-<td>/dev/lp [0-2] (25 針印表機) /dev/usb/lp [0-15] (USB 介面)</td>
-</tr>
-<tr>
-<td>滑鼠</td>
-<td>/dev/input/mouse [0-15] (通用) /dev/psaux (PS/2 界面) /dev/mouse (當前滑鼠)</td>
-</tr>
-<tr>
-<td>CDROM/DVDROM</td>
-<td>/dev/scd [0-1] (通用) /dev/sr [0-1] (通用，CentOS 較常見) /dev/cdrom (當前 CDROM)</td>
-</tr>
-<tr>
-<td>磁帶機</td>
-<td>/dev/ht0 (IDE 界面) /dev/st0 (SATA/SCSI 界面) /dev/tape (當前磁帶)</td>
-</tr>
-<tr>
-<td>IDE 硬碟機</td>
-<td>/dev/hd [a-d] (舊式系統才有)</td>
-</tr>
-</tbody>
-</table>
-<p>一般来说，支持 SATA 的磁盘会以 /dev/sd [a-p] 来命名，而虚拟磁盘（如在虚拟机内的磁盘）会以 /dev/vd [a-p] 来命名。<strong>那么假设主板上安装了多个 SATA 磁盘 / USB 硬盘，如何决定他们的命名顺序呢？答案是以侦测到的顺序来决定，先侦测到的磁盘会有更 “前” 的名字。</strong></p>
-<blockquote>
-<p>例題：</p>
-<p>如果你的 PC 上面有兩個 SATA 磁碟以及一個 USB 磁碟，而主機板上面有六個 SATA 的插槽。這兩個 SATA 磁碟分別安插在主機板上的 SATA1, SATA5 插槽上， 請問這三個磁碟在 Linux 中的裝置檔名為何？</p>
-<p>答：</p>
-<p>由於是使用偵測到的順序來決定裝置檔名，並非與實際插槽代號有關，因此裝置的檔名如下：</p>
-<ol>
-<li>SATA1 插槽上的檔名：/dev/sda</li>
-<li>SATA5 插槽上的檔名：/dev/sdb</li>
-<li>USB 磁碟 (開機完成後才被系統捉到)：/dev/sdc</li>
-</ol>
-</blockquote>
-<p>那假如一个磁盘被分成多个区，那么每个区的命名又该如何？</p>
-<p><img src="./image-20240310210203478.png" alt="image-20240310210203478"></p>
+    <p>hexo</p>
+<h1 id="题目描述"><a class="markdownIt-Anchor" href="#题目描述">#</a> 题目描述</h1>
+<p>给你一个由字符  <code>'a'</code> 、 <code>'b'</code> 、 <code>'c'</code>  组成的字符串  <code>s</code>  和一个非负整数  <code>k</code>  。每分钟，你可以选择取走  <code>s</code>  <strong>最左侧</strong> 还是 <strong>最右侧</strong> 的那个字符。</p>
+<p>你必须取走每种字符 <strong>至少</strong>  <code>k</code>  个，返回需要的 <strong>最少</strong> 分钟数；如果无法取到，则返回  <code>-1</code>  。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">输入：s = &quot;aabaaaacaabc&quot;, k = 2</span><br><span class="line">输出：8</span><br><span class="line">解释：</span><br><span class="line">从 s 的左侧取三个字符，现在共取到两个字符 &#x27;a&#x27; 、一个字符 &#x27;b&#x27; 。</span><br><span class="line">从 s 的右侧取五个字符，现在共取到四个字符 &#x27;a&#x27; 、两个字符 &#x27;b&#x27; 和两个字符 &#x27;c&#x27; 。</span><br><span class="line">共需要 3 + 5 = 8 分钟。</span><br><span class="line">可以证明需要的最少分钟数是 8 。</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：s = &quot;a&quot;, k = 1</span><br><span class="line">输出：-1</span><br><span class="line">解释：无法取到一个字符 &#x27;b&#x27; 或者 &#x27;c&#x27;，所以返回 -1 。</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= s.length &lt;= 105</code></li>
+<li><code>s</code>  仅由字母  <code>'a'</code> 、 <code>'b'</code> 、 <code>'c'</code>  组成</li>
+<li><code>0 &lt;= k &lt;= s.length</code></li>
+</ul>
+<h1 id="解题思路"><a class="markdownIt-Anchor" href="#解题思路">#</a> 解题思路</h1>
+<p><strong>主打一个逆向思维 + 双指针操作</strong></p>
+<p>要从两边至少分别取 k 个 a，b，c 的字符，剩下的一个连续字符串所含的各字符一定不超过总数减去 k 个。我们要找最小的花费（分钟数），则要找最长的这个连续字符串，且该字符串需要满足上述条件。</p>
+<p>首先对每个字符的数量计数，若有一种字符的出现数量少于 k，那么直接返回 - 1</p>
+<p>然后使用双指针法，遍历左指针的位置，使用右指针去扩大连续字符串的范围，直到满足条件。在左指针向右移动的过程中，<strong>右指针始终递增</strong>，因此可以做到 O (n) 的时间复杂度，而不是 O (n^2) 去遍历两个指针的位置。<strong>注意特殊情况，即当右指针一步也没走出去，以及 right 当前所指位置并未计入有效字符串中。</strong></p>
+<h1 id="时间复杂度与空间复杂度"><a class="markdownIt-Anchor" href="#时间复杂度与空间复杂度">#</a> 时间复杂度与空间复杂度</h1>
+<p>时间复杂度：一次遍历，复杂度 O (n)</p>
+<p>空间复杂度：双指针占用常数级空间，即 O (1)</p>
+<h1 id="代码实现"><a class="markdownIt-Anchor" href="#代码实现">#</a> 代码实现</h1>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">takeCharacters</span>(<span class="params">self, s: <span class="built_in">str</span>, k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        c = &#123;<span class="string">&#x27;a&#x27;</span>:<span class="number">0</span>, <span class="string">&#x27;b&#x27;</span>:<span class="number">0</span>, <span class="string">&#x27;c&#x27;</span>:<span class="number">0</span>&#125;</span><br><span class="line">        <span class="keyword">for</span> ch <span class="keyword">in</span> s:</span><br><span class="line">           c[ch] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> e <span class="keyword">in</span> c:</span><br><span class="line">            <span class="keyword">if</span> c[e] &lt; k:</span><br><span class="line">                <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># print(c)</span></span><br><span class="line">        d = &#123;<span class="string">&#x27;a&#x27;</span>:<span class="number">0</span>, <span class="string">&#x27;b&#x27;</span>:<span class="number">0</span>, <span class="string">&#x27;c&#x27;</span>:<span class="number">0</span>&#125;</span><br><span class="line">        right = <span class="number">0</span></span><br><span class="line">        res = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> left <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(s)):</span><br><span class="line">            <span class="comment"># print(d)</span></span><br><span class="line">            <span class="keyword">if</span> right &lt; left: <span class="comment">#若right甚至未踏出一步，从新的left开始</span></span><br><span class="line">                right = left</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> right &lt; <span class="built_in">len</span>(s) <span class="keyword">and</span> d[s[right]] &lt; c[s[right]] - k:</span><br><span class="line">                d[s[right]] += <span class="number">1</span></span><br><span class="line">                right += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            res = <span class="built_in">max</span>(res, right - left)</span><br><span class="line">            <span class="keyword">if</span> left &lt; right: <span class="comment"># 如果right踏出至少一步，因为left即将左移，那么从字典中减去left所指位置字符的出现数量一次</span></span><br><span class="line">                d[s[left]] -= <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(s) - res</span><br></pre></td></tr></table></figure>
 
   </div>
   
     
-      <a id="older" class="blog-nav" href="/2023/10/24/C%E8%AF%AD%E8%A8%80%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95-%E7%AC%94%E8%AF%95%E9%97%AE%E9%A2%98%E9%9B%86%E5%90%88/">OLDER&nbsp;&gt;</a>
+      <a id="older" class="blog-nav" href="/2023/10/17/LeetcodeWeekly-366-04-%E5%AF%B9%E6%95%B0%E7%BB%84%E6%89%A7%E8%A1%8C%E6%93%8D%E4%BD%9C%E4%BD%BF%E5%B9%B3%E6%96%B9%E5%92%8C%E6%9C%80%E5%A4%A7/">OLDER&nbsp;&gt;</a>
       
         
+          <a id="newer" class="blog-nav" href="/2023/10/24/C%E8%AF%AD%E8%A8%80%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95-%E7%AC%94%E8%AF%95%E9%97%AE%E9%A2%98%E9%9B%86%E5%90%88/">&lt;&nbsp;NEWER</a>
+          
             
 </div>
         <div class="footer">
