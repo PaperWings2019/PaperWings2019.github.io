@@ -7,6 +7,15 @@
     <category term="Code" />
     <category term="Daily" />
     <entry>
+        <id>https://paperwings2019.github.io/2023/10/15/My%20first%20post%202/</id>
+        <title>My first Post</title>
+        <link rel="alternate" href="https://paperwings2019.github.io/2023/10/15/My%20first%20post%202/"/>
+        <content type="html">&lt;p&gt;Hello World&lt;/p&gt;
+</content>
+        <category term="Daily" />
+        <updated>2023-10-15T02:22:03.000Z</updated>
+    </entry>
+    <entry>
         <id>https://paperwings2019.github.io/2023/10/15/My%20first%20post/</id>
         <title>My first Post</title>
         <link rel="alternate" href="https://paperwings2019.github.io/2023/10/15/My%20first%20post/"/>
