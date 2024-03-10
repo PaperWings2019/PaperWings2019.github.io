@@ -1,91 +1,21 @@
 <?xml version="1.0"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://paperwings2019.github.io</id>
-    <title>PaperWings Blog • Posts by &#34;code&#34; tag</title>
-    <link href="https://paperwings2019.github.io" />
-    <updated>2024-03-10T11:49:25.000Z</updated>
-    <category term="Code" />
-    <category term="Daily" />
-    <entry>
-        <id>https://paperwings2019.github.io/2024/03/10/Linux%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</id>
-        <title>Linux学习笔记</title>
-        <link rel="alternate" href="https://paperwings2019.github.io/2024/03/10/Linux%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-        <content type="html">&lt;p&gt;PS：该学习笔记资源来自于&lt;a href=&#34;https://linux.vbird.org/&#34;&gt;鸟叔的 linux 私房菜&lt;/a&gt;，感谢大佬～&lt;/p&gt;
-&lt;p&gt;PPS：由于在学习时已经有了一定计算机基础，于是直接从第二章开始做笔记！&lt;/p&gt;
-&lt;h1 id=&#34;主机结构与磁盘分区&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#主机结构与磁盘分区&#34;&gt;#&lt;/a&gt; 主机结构与磁盘分区&lt;/h1&gt;
-&lt;h2 id=&#34;使用合适的硬件搭建linux系统&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#使用合适的硬件搭建linux系统&#34;&gt;#&lt;/a&gt; 使用合适的硬件搭建 Linux 系统&lt;/h2&gt;
-&lt;p&gt;在搭建 Linux 系统时，硬件的选配也很重要，在购买之前一定要查看其对于 Linux 的支持性。针对不同的需求，如办公或者是作为服务器，也需要选配不同等级的硬件，如 CPU，内存，网卡，磁盘等。&lt;/p&gt;
-&lt;h2 id=&#34;磁盘分区&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#磁盘分区&#34;&gt;#&lt;/a&gt; 磁盘分区&lt;/h2&gt;
-&lt;p&gt;** 在 Linux 中，设备在文件系统中就是一个文件夹或者文件。** 对于不同类型的存储装置 / 设备，Linux 会按照以下的规则进行命名：&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;裝置&lt;/th&gt;
-&lt;th&gt;裝置在 Linux 內的檔名&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;SCSI/SATA/USB 硬碟機&lt;/td&gt;
-&lt;td&gt;/dev/sd[a-p]&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;USB 快閃碟&lt;/td&gt;
-&lt;td&gt;/dev/sd [a-p] (與 SATA 相同)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;VirtI/O 界面&lt;/td&gt;
-&lt;td&gt;/dev/vd [a-p] (用於虛擬機器內)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;軟碟機&lt;/td&gt;
-&lt;td&gt;/dev/fd[0-1]&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;印表機&lt;/td&gt;
-&lt;td&gt;/dev/lp [0-2] (25 針印表機) /dev/usb/lp [0-15] (USB 介面)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;滑鼠&lt;/td&gt;
-&lt;td&gt;/dev/input/mouse [0-15] (通用) /dev/psaux (PS/2 界面) /dev/mouse (當前滑鼠)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;CDROM/DVDROM&lt;/td&gt;
-&lt;td&gt;/dev/scd [0-1] (通用) /dev/sr [0-1] (通用，CentOS 較常見) /dev/cdrom (當前 CDROM)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;磁帶機&lt;/td&gt;
-&lt;td&gt;/dev/ht0 (IDE 界面) /dev/st0 (SATA/SCSI 界面) /dev/tape (當前磁帶)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;IDE 硬碟機&lt;/td&gt;
-&lt;td&gt;/dev/hd [a-d] (舊式系統才有)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;一般来说，支持 SATA 的磁盘会以 /dev/sd [a-p] 来命名，而虚拟磁盘（如在虚拟机内的磁盘）会以 /dev/vd [a-p] 来命名。&lt;strong&gt;那么假设主板上安装了多个 SATA 磁盘 / USB 硬盘，如何决定他们的命名顺序呢？答案是以侦测到的顺序来决定，先侦测到的磁盘会有更 “前” 的名字。&lt;/strong&gt;&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;例題：&lt;/p&gt;
-&lt;p&gt;如果你的 PC 上面有兩個 SATA 磁碟以及一個 USB 磁碟，而主機板上面有六個 SATA 的插槽。這兩個 SATA 磁碟分別安插在主機板上的 SATA1, SATA5 插槽上， 請問這三個磁碟在 Linux 中的裝置檔名為何？&lt;/p&gt;
-&lt;p&gt;答：&lt;/p&gt;
-&lt;p&gt;由於是使用偵測到的順序來決定裝置檔名，並非與實際插槽代號有關，因此裝置的檔名如下：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;SATA1 插槽上的檔名：/dev/sda&lt;/li&gt;
-&lt;li&gt;SATA5 插槽上的檔名：/dev/sdb&lt;/li&gt;
-&lt;li&gt;USB 磁碟 (開機完成後才被系統捉到)：/dev/sdc&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;那假如一个磁盘被分成多个区，那么每个区的命名又该如何？&lt;/p&gt;
-&lt;img src=&#34;../../pics/image-20240310202619263.png&#34; alt=&#34;image-20240310202619263&#34; style=&#34;zoom:50%;&#34; /&gt;
-</content>
-        <category term="Code" />
-        <updated>2024-03-10T11:49:25.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://paperwings2019.github.io/2023/10/24/C%E8%AF%AD%E8%A8%80%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95-%E7%AC%94%E8%AF%95%E9%97%AE%E9%A2%98%E9%9B%86%E5%90%88/</id>
-        <title>C语言常见面试/笔试问题集合</title>
-        <link rel="alternate" href="https://paperwings2019.github.io/2023/10/24/C%E8%AF%AD%E8%A8%80%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95-%E7%AC%94%E8%AF%95%E9%97%AE%E9%A2%98%E9%9B%86%E5%90%88/"/>
-        <content type="html">&lt;h1 id=&#34;概念问题&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#概念问题&#34;&gt;#&lt;/a&gt; 概念问题&lt;/h1&gt;
+<rss version="2.0">
+    <channel>
+        <title>PaperWings Blog</title>
+        <link>https://paperwings2019.github.io</link>
+        <description></description>
+        <language>zh</language>
+        <pubDate>Tue, 24 Oct 2023 11:24:44 +0800</pubDate>
+        <lastBuildDate>Tue, 24 Oct 2023 11:24:44 +0800</lastBuildDate>
+        <category>Code</category>
+        <category>Daily</category>
+        <item>
+            <guid isPermalink="true">https://paperwings2019.github.io/2023/10/24/C%E8%AF%AD%E8%A8%80%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95-%E7%AC%94%E8%AF%95%E9%97%AE%E9%A2%98%E9%9B%86%E5%90%88/</guid>
+            <title>C语言常见面试/笔试问题集合</title>
+            <link>https://paperwings2019.github.io/2023/10/24/C%E8%AF%AD%E8%A8%80%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95-%E7%AC%94%E8%AF%95%E9%97%AE%E9%A2%98%E9%9B%86%E5%90%88/</link>
+            <category>Code</category>
+            <pubDate>Tue, 24 Oct 2023 11:24:44 +0800</pubDate>
+            <description><![CDATA[ &lt;h1 id=&#34;概念问题&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#概念问题&#34;&gt;#&lt;/a&gt; 概念问题&lt;/h1&gt;
 &lt;h2 id=&#34;static关键字的作用原理&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#static关键字的作用原理&#34;&gt;#&lt;/a&gt; static 关键字的作用 / 原理&lt;/h2&gt;
 &lt;p&gt;被 static 修饰的变量或者函数会被放入静态存储区。根据上下文，static 有不同的作用和意义&lt;/p&gt;
 &lt;ul&gt;
@@ -216,15 +146,15 @@
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;sqlCopy code&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;SET TRANSACTION ISOLATION LEVEL READ COMMITTED;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;需要根据具体应用场景和要求选择合适的事务隔离级别，以平衡数据的一致性和性能需求。&lt;/p&gt;
 &lt;h1 id=&#34;代码结果问题&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#代码结果问题&#34;&gt;#&lt;/a&gt; 代码结果问题&lt;/h1&gt;
-</content>
-        <category term="Code" />
-        <updated>2023-10-24T03:24:44.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://paperwings2019.github.io/2023/10/18/Leetcode-2516-%E6%AF%8F%E7%A7%8D%E5%AD%97%E7%AC%A6%E8%87%B3%E5%B0%91%E5%8F%96-K-%E4%B8%AA/</id>
-        <title>Leetcode-2516-每种字符至少取 K 个</title>
-        <link rel="alternate" href="https://paperwings2019.github.io/2023/10/18/Leetcode-2516-%E6%AF%8F%E7%A7%8D%E5%AD%97%E7%AC%A6%E8%87%B3%E5%B0%91%E5%8F%96-K-%E4%B8%AA/"/>
-        <content type="html">&lt;p&gt;hexo&lt;/p&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://paperwings2019.github.io/2023/10/18/Leetcode-2516-%E6%AF%8F%E7%A7%8D%E5%AD%97%E7%AC%A6%E8%87%B3%E5%B0%91%E5%8F%96-K-%E4%B8%AA/</guid>
+            <title>Leetcode-2516-每种字符至少取 K 个</title>
+            <link>https://paperwings2019.github.io/2023/10/18/Leetcode-2516-%E6%AF%8F%E7%A7%8D%E5%AD%97%E7%AC%A6%E8%87%B3%E5%B0%91%E5%8F%96-K-%E4%B8%AA/</link>
+            <category>Code</category>
+            <pubDate>Wed, 18 Oct 2023 23:31:57 +0800</pubDate>
+            <description><![CDATA[ &lt;p&gt;hexo&lt;/p&gt;
 &lt;h1 id=&#34;题目描述&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#题目描述&#34;&gt;#&lt;/a&gt; 题目描述&lt;/h1&gt;
 &lt;p&gt;给你一个由字符  &lt;code&gt;&#39;a&#39;&lt;/code&gt; 、 &lt;code&gt;&#39;b&#39;&lt;/code&gt; 、 &lt;code&gt;&#39;c&#39;&lt;/code&gt;  组成的字符串  &lt;code&gt;s&lt;/code&gt;  和一个非负整数  &lt;code&gt;k&lt;/code&gt;  。每分钟，你可以选择取走  &lt;code&gt;s&lt;/code&gt;  &lt;strong&gt;最左侧&lt;/strong&gt; 还是 &lt;strong&gt;最右侧&lt;/strong&gt; 的那个字符。&lt;/p&gt;
 &lt;p&gt;你必须取走每种字符 &lt;strong&gt;至少&lt;/strong&gt;  &lt;code&gt;k&lt;/code&gt;  个，返回需要的 &lt;strong&gt;最少&lt;/strong&gt; 分钟数；如果无法取到，则返回  &lt;code&gt;-1&lt;/code&gt;  。&lt;/p&gt;
@@ -248,15 +178,15 @@
 &lt;p&gt;空间复杂度：双指针占用常数级空间，即 O (1)&lt;/p&gt;
 &lt;h1 id=&#34;代码实现&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#代码实现&#34;&gt;#&lt;/a&gt; 代码实现&lt;/h1&gt;
 &lt;figure class=&#34;highlight python&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;27&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;title class_&#34;&gt;Solution&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;title function_&#34;&gt;takeCharacters&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;self, s: &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;, k: &lt;span class=&#34;built_in&#34;&gt;int&lt;/span&gt;&lt;/span&gt;) -&amp;gt; &lt;span class=&#34;built_in&#34;&gt;int&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        c = &amp;#123;&lt;span class=&#34;string&#34;&gt;&amp;#x27;a&amp;#x27;&lt;/span&gt;:&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;string&#34;&gt;&amp;#x27;b&amp;#x27;&lt;/span&gt;:&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;string&#34;&gt;&amp;#x27;c&amp;#x27;&lt;/span&gt;:&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; ch &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; s:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;           c[ch] += &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; e &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; c:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; c[e] &amp;lt; k:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;keyword&#34;&gt;return&lt;/span&gt; -&lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;comment&#34;&gt;# print(c)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        d = &amp;#123;&lt;span class=&#34;string&#34;&gt;&amp;#x27;a&amp;#x27;&lt;/span&gt;:&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;string&#34;&gt;&amp;#x27;b&amp;#x27;&lt;/span&gt;:&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;string&#34;&gt;&amp;#x27;c&amp;#x27;&lt;/span&gt;:&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        right = &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        res = &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; left &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;built_in&#34;&gt;range&lt;/span&gt;(&lt;span class=&#34;built_in&#34;&gt;len&lt;/span&gt;(s)):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;comment&#34;&gt;# print(d)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; right &amp;lt; left: &lt;span class=&#34;comment&#34;&gt;#若right甚至未踏出一步，从新的left开始&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                right = left&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;while&lt;/span&gt; right &amp;lt; &lt;span class=&#34;built_in&#34;&gt;len&lt;/span&gt;(s) &lt;span class=&#34;keyword&#34;&gt;and&lt;/span&gt; d[s[right]] &amp;lt; c[s[right]] - k:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                d[s[right]] += &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                right += &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            res = &lt;span class=&#34;built_in&#34;&gt;max&lt;/span&gt;(res, right - left)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; left &amp;lt; right: &lt;span class=&#34;comment&#34;&gt;# 如果right踏出至少一步，因为left即将左移，那么从字典中减去left所指位置字符的出现数量一次&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                d[s[left]] -= &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;built_in&#34;&gt;len&lt;/span&gt;(s) - res&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-</content>
-        <category term="Code" />
-        <updated>2023-10-18T15:31:57.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://paperwings2019.github.io/2023/10/17/LeetcodeWeekly-366-04-%E5%AF%B9%E6%95%B0%E7%BB%84%E6%89%A7%E8%A1%8C%E6%93%8D%E4%BD%9C%E4%BD%BF%E5%B9%B3%E6%96%B9%E5%92%8C%E6%9C%80%E5%A4%A7/</id>
-        <title>LeetcodeWeekly-366-04:对数组执行操作使平方和最大</title>
-        <link rel="alternate" href="https://paperwings2019.github.io/2023/10/17/LeetcodeWeekly-366-04-%E5%AF%B9%E6%95%B0%E7%BB%84%E6%89%A7%E8%A1%8C%E6%93%8D%E4%BD%9C%E4%BD%BF%E5%B9%B3%E6%96%B9%E5%92%8C%E6%9C%80%E5%A4%A7/"/>
-        <content type="html">&lt;h1 id=&#34;题目描述&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#题目描述&#34;&gt;#&lt;/a&gt; 题目描述&lt;/h1&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://paperwings2019.github.io/2023/10/17/LeetcodeWeekly-366-04-%E5%AF%B9%E6%95%B0%E7%BB%84%E6%89%A7%E8%A1%8C%E6%93%8D%E4%BD%9C%E4%BD%BF%E5%B9%B3%E6%96%B9%E5%92%8C%E6%9C%80%E5%A4%A7/</guid>
+            <title>LeetcodeWeekly-366-04:对数组执行操作使平方和最大</title>
+            <link>https://paperwings2019.github.io/2023/10/17/LeetcodeWeekly-366-04-%E5%AF%B9%E6%95%B0%E7%BB%84%E6%89%A7%E8%A1%8C%E6%93%8D%E4%BD%9C%E4%BD%BF%E5%B9%B3%E6%96%B9%E5%92%8C%E6%9C%80%E5%A4%A7/</link>
+            <category>Code</category>
+            <pubDate>Tue, 17 Oct 2023 21:04:07 +0800</pubDate>
+            <description><![CDATA[ &lt;h1 id=&#34;题目描述&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#题目描述&#34;&gt;#&lt;/a&gt; 题目描述&lt;/h1&gt;
 &lt;p&gt;给你一个下标从 &lt;strong&gt;0&lt;/strong&gt; 开始的整数数组  &lt;code&gt;nums&lt;/code&gt;  和一个 &lt;strong&gt;正&lt;/strong&gt; 整数  &lt;code&gt;k&lt;/code&gt;  。&lt;/p&gt;
 &lt;p&gt;你可以对数组执行以下操作 &lt;strong&gt;任意次&lt;/strong&gt; ：&lt;/p&gt;
 &lt;ul&gt;
@@ -283,15 +213,15 @@
 &lt;p&gt;时间复杂度 O (n)，空间复杂度 O (1)&lt;/p&gt;
 &lt;h1 id=&#34;代码实现&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#代码实现&#34;&gt;#&lt;/a&gt; 代码实现&lt;/h1&gt;
 &lt;figure class=&#34;highlight python&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;title class_&#34;&gt;Solution&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;title function_&#34;&gt;maxSum&lt;/span&gt;(&lt;span class=&#34;params&#34;&gt;self, nums: &lt;span class=&#34;type&#34;&gt;List&lt;/span&gt;[&lt;span class=&#34;built_in&#34;&gt;int&lt;/span&gt;], k: &lt;span class=&#34;built_in&#34;&gt;int&lt;/span&gt;&lt;/span&gt;) -&amp;gt; &lt;span class=&#34;built_in&#34;&gt;int&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        cnt = [&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; i &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;built_in&#34;&gt;range&lt;/span&gt;(&lt;span class=&#34;number&#34;&gt;30&lt;/span&gt;)]&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; num &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; nums:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            i = &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;while&lt;/span&gt; (num != &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                cnt[i] += num % &lt;span class=&#34;number&#34;&gt;2&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                i += &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                num &amp;gt;&amp;gt;= &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        res = &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; _ &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;built_in&#34;&gt;range&lt;/span&gt;(k):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            x = &lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; i &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;built_in&#34;&gt;range&lt;/span&gt;(&lt;span class=&#34;number&#34;&gt;30&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                t = cnt[i]&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; t:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                    x += &lt;span class=&#34;built_in&#34;&gt;pow&lt;/span&gt;(&lt;span class=&#34;number&#34;&gt;2&lt;/span&gt;, i)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                    cnt[i] = t - &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            res += x * x&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;return&lt;/span&gt; res % (&lt;span class=&#34;built_in&#34;&gt;pow&lt;/span&gt;(&lt;span class=&#34;number&#34;&gt;10&lt;/span&gt;, &lt;span class=&#34;number&#34;&gt;9&lt;/span&gt;) + &lt;span class=&#34;number&#34;&gt;7&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-</content>
-        <category term="Code" />
-        <updated>2023-10-17T13:04:07.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://paperwings2019.github.io/2023/10/15/LeetcodeWeekly-366-03-%E6%89%A7%E8%A1%8C%E6%93%8D%E4%BD%9C%E4%BD%BF%E4%B8%A4%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9B%B8%E7%AD%89/</id>
-        <title>LeetcodeWeekly-366-03:执行操作使两个字符串相等</title>
-        <link rel="alternate" href="https://paperwings2019.github.io/2023/10/15/LeetcodeWeekly-366-03-%E6%89%A7%E8%A1%8C%E6%93%8D%E4%BD%9C%E4%BD%BF%E4%B8%A4%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9B%B8%E7%AD%89/"/>
-        <content type="html">&lt;h1 id=&#34;题目描述&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#题目描述&#34;&gt;#&lt;/a&gt; 题目描述&lt;/h1&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://paperwings2019.github.io/2023/10/15/LeetcodeWeekly-366-03-%E6%89%A7%E8%A1%8C%E6%93%8D%E4%BD%9C%E4%BD%BF%E4%B8%A4%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9B%B8%E7%AD%89/</guid>
+            <title>LeetcodeWeekly-366-03:执行操作使两个字符串相等</title>
+            <link>https://paperwings2019.github.io/2023/10/15/LeetcodeWeekly-366-03-%E6%89%A7%E8%A1%8C%E6%93%8D%E4%BD%9C%E4%BD%BF%E4%B8%A4%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9B%B8%E7%AD%89/</link>
+            <category>Code</category>
+            <pubDate>Sun, 15 Oct 2023 13:50:21 +0800</pubDate>
+            <description><![CDATA[ &lt;h1 id=&#34;题目描述&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#题目描述&#34;&gt;#&lt;/a&gt; 题目描述&lt;/h1&gt;
 &lt;p&gt;给你两个下标从 &lt;strong&gt;0&lt;/strong&gt; 开始的二进制字符串  &lt;code&gt;s1&lt;/code&gt;  和  &lt;code&gt;s2&lt;/code&gt;  ，两个字符串的长度都是  &lt;code&gt;n&lt;/code&gt;  ，再给你一个正整数  &lt;code&gt;x&lt;/code&gt;  。&lt;/p&gt;
 &lt;p&gt;你可以对字符串  &lt;code&gt;s1&lt;/code&gt;  执行以下操作 &lt;strong&gt;任意次&lt;/strong&gt; ：&lt;/p&gt;
 &lt;ul&gt;
@@ -338,8 +268,16 @@
 &lt;h1 id=&#34;思考题&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#思考题&#34;&gt;#&lt;/a&gt; 思考题&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;如果第一种操作限制 | i-j|&amp;gt;=k 呢？&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;可以多维护一个整数参数 t，记录下一个可以进行免费翻转的下标位置，即如果使用第一种操作，那么 t 更新为 i+k。在判断是否能免费翻转时，除了 j 还需要看当前 i 是否大于等于 t，如果都满足的话才能免费翻转。&lt;/p&gt;
-</content>
-        <category term="Code" />
-        <updated>2023-10-15T05:50:21.000Z</updated>
-    </entry>
-</feed>
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://paperwings2019.github.io/2023/10/15/My%20first%20post/</guid>
+            <title>My first Post</title>
+            <link>https://paperwings2019.github.io/2023/10/15/My%20first%20post/</link>
+            <category>Daily</category>
+            <pubDate>Sun, 15 Oct 2023 10:22:03 +0800</pubDate>
+            <description><![CDATA[ &lt;p&gt;Hello World&lt;/p&gt;
+ ]]></description>
+        </item>
+    </channel>
+</rss>

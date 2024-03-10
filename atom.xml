@@ -3,9 +3,84 @@
     <id>https://paperwings2019.github.io</id>
     <title>PaperWings Blog</title>
     <link href="https://paperwings2019.github.io" />
-    <updated>2023-10-24T03:24:44.000Z</updated>
+    <updated>2024-03-10T11:49:25.000Z</updated>
     <category term="Code" />
     <category term="Daily" />
+    <entry>
+        <id>https://paperwings2019.github.io/2024/03/10/Linux%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</id>
+        <title>Linux学习笔记</title>
+        <link rel="alternate" href="https://paperwings2019.github.io/2024/03/10/Linux%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+        <content type="html">&lt;p&gt;PS：该学习笔记资源来自于&lt;a href=&#34;https://linux.vbird.org/&#34;&gt;鸟叔的 linux 私房菜&lt;/a&gt;，感谢大佬～&lt;/p&gt;
+&lt;p&gt;PPS：由于在学习时已经有了一定计算机基础，于是直接从第二章开始做笔记！&lt;/p&gt;
+&lt;h1 id=&#34;主机结构与磁盘分区&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#主机结构与磁盘分区&#34;&gt;#&lt;/a&gt; 主机结构与磁盘分区&lt;/h1&gt;
+&lt;h2 id=&#34;使用合适的硬件搭建linux系统&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#使用合适的硬件搭建linux系统&#34;&gt;#&lt;/a&gt; 使用合适的硬件搭建 Linux 系统&lt;/h2&gt;
+&lt;p&gt;在搭建 Linux 系统时，硬件的选配也很重要，在购买之前一定要查看其对于 Linux 的支持性。针对不同的需求，如办公或者是作为服务器，也需要选配不同等级的硬件，如 CPU，内存，网卡，磁盘等。&lt;/p&gt;
+&lt;h2 id=&#34;磁盘分区&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#磁盘分区&#34;&gt;#&lt;/a&gt; 磁盘分区&lt;/h2&gt;
+&lt;p&gt;** 在 Linux 中，设备在文件系统中就是一个文件夹或者文件。** 对于不同类型的存储装置 / 设备，Linux 会按照以下的规则进行命名：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;裝置&lt;/th&gt;
+&lt;th&gt;裝置在 Linux 內的檔名&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;SCSI/SATA/USB 硬碟機&lt;/td&gt;
+&lt;td&gt;/dev/sd[a-p]&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;USB 快閃碟&lt;/td&gt;
+&lt;td&gt;/dev/sd [a-p] (與 SATA 相同)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;VirtI/O 界面&lt;/td&gt;
+&lt;td&gt;/dev/vd [a-p] (用於虛擬機器內)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;軟碟機&lt;/td&gt;
+&lt;td&gt;/dev/fd[0-1]&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;印表機&lt;/td&gt;
+&lt;td&gt;/dev/lp [0-2] (25 針印表機) /dev/usb/lp [0-15] (USB 介面)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;滑鼠&lt;/td&gt;
+&lt;td&gt;/dev/input/mouse [0-15] (通用) /dev/psaux (PS/2 界面) /dev/mouse (當前滑鼠)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;CDROM/DVDROM&lt;/td&gt;
+&lt;td&gt;/dev/scd [0-1] (通用) /dev/sr [0-1] (通用，CentOS 較常見) /dev/cdrom (當前 CDROM)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;磁帶機&lt;/td&gt;
+&lt;td&gt;/dev/ht0 (IDE 界面) /dev/st0 (SATA/SCSI 界面) /dev/tape (當前磁帶)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IDE 硬碟機&lt;/td&gt;
+&lt;td&gt;/dev/hd [a-d] (舊式系統才有)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;一般来说，支持 SATA 的磁盘会以 /dev/sd [a-p] 来命名，而虚拟磁盘（如在虚拟机内的磁盘）会以 /dev/vd [a-p] 来命名。&lt;strong&gt;那么假设主板上安装了多个 SATA 磁盘 / USB 硬盘，如何决定他们的命名顺序呢？答案是以侦测到的顺序来决定，先侦测到的磁盘会有更 “前” 的名字。&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例題：&lt;/p&gt;
+&lt;p&gt;如果你的 PC 上面有兩個 SATA 磁碟以及一個 USB 磁碟，而主機板上面有六個 SATA 的插槽。這兩個 SATA 磁碟分別安插在主機板上的 SATA1, SATA5 插槽上， 請問這三個磁碟在 Linux 中的裝置檔名為何？&lt;/p&gt;
+&lt;p&gt;答：&lt;/p&gt;
+&lt;p&gt;由於是使用偵測到的順序來決定裝置檔名，並非與實際插槽代號有關，因此裝置的檔名如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;SATA1 插槽上的檔名：/dev/sda&lt;/li&gt;
+&lt;li&gt;SATA5 插槽上的檔名：/dev/sdb&lt;/li&gt;
+&lt;li&gt;USB 磁碟 (開機完成後才被系統捉到)：/dev/sdc&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;那假如一个磁盘被分成多个区，那么每个区的命名又该如何？&lt;/p&gt;
+&lt;img src=&#34;../../pics/image-20240310202619263.png&#34; alt=&#34;image-20240310202619263&#34; style=&#34;zoom:50%;&#34; /&gt;
+</content>
+        <category term="Code" />
+        <updated>2024-03-10T11:49:25.000Z</updated>
+    </entry>
     <entry>
         <id>https://paperwings2019.github.io/2023/10/24/C%E8%AF%AD%E8%A8%80%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95-%E7%AC%94%E8%AF%95%E9%97%AE%E9%A2%98%E9%9B%86%E5%90%88/</id>
         <title>C语言常见面试/笔试问题集合</title>
