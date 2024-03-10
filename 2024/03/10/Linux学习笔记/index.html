@@ -121,73 +121,68 @@
     Linux学习笔记
   </h1>
   <div class="content markdown-body">
-    <p>PS：该学习笔记资源来自于<a target="_blank" rel="noopener" href="https://linux.vbird.org/">鸟叔的 linux 私房菜</a>，感谢大佬～</p>
+    <p>PS：该学习笔记资源来自于<a target="_blank" rel="noopener" href="https://linux.vbird.org/">鸟叔的linux私房菜</a>，感谢大佬～</p>
 <p>PPS：由于在学习时已经有了一定计算机基础，于是直接从第二章开始做笔记！</p>
-<h1 id="主机结构与磁盘分区"><a class="markdownIt-Anchor" href="#主机结构与磁盘分区">#</a> 主机结构与磁盘分区</h1>
-<h2 id="使用合适的硬件搭建linux系统"><a class="markdownIt-Anchor" href="#使用合适的硬件搭建linux系统">#</a> 使用合适的硬件搭建 Linux 系统</h2>
-<p>在搭建 Linux 系统时，硬件的选配也很重要，在购买之前一定要查看其对于 Linux 的支持性。针对不同的需求，如办公或者是作为服务器，也需要选配不同等级的硬件，如 CPU，内存，网卡，磁盘等。</p>
-<h2 id="磁盘分区"><a class="markdownIt-Anchor" href="#磁盘分区">#</a> 磁盘分区</h2>
-<p>** 在 Linux 中，设备在文件系统中就是一个文件夹或者文件。** 对于不同类型的存储装置 / 设备，Linux 会按照以下的规则进行命名：</p>
+<h1 id="主机结构与磁盘分区"><a href="#主机结构与磁盘分区" class="headerlink" title="主机结构与磁盘分区"></a>主机结构与磁盘分区</h1><h2 id="使用合适的硬件搭建Linux系统"><a href="#使用合适的硬件搭建Linux系统" class="headerlink" title="使用合适的硬件搭建Linux系统"></a>使用合适的硬件搭建Linux系统</h2><p>在搭建Linux系统时，硬件的选配也很重要，在购买之前一定要查看其对于Linux的支持性。针对不同的需求，如办公或者是作为服务器，也需要选配不同等级的硬件，如CPU，内存，网卡，磁盘等。</p>
+<h2 id="磁盘分区"><a href="#磁盘分区" class="headerlink" title="磁盘分区"></a>磁盘分区</h2><p><strong>在Linux中，设备在文件系统中就是一个文件夹或者文件。</strong>对于不同类型的存储装置&#x2F;设备，Linux会按照以下的规则进行命名：</p>
 <table>
 <thead>
 <tr>
 <th>裝置</th>
-<th>裝置在 Linux 內的檔名</th>
+<th>裝置在Linux內的檔名</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td>SCSI/SATA/USB 硬碟機</td>
-<td>/dev/sd[a-p]</td>
+<tbody><tr>
+<td>SCSI&#x2F;SATA&#x2F;USB硬碟機</td>
+<td>&#x2F;dev&#x2F;sd[a-p]</td>
 </tr>
 <tr>
-<td>USB 快閃碟</td>
-<td>/dev/sd [a-p] (與 SATA 相同)</td>
+<td>USB快閃碟</td>
+<td>&#x2F;dev&#x2F;sd[a-p] (與SATA相同)</td>
 </tr>
 <tr>
-<td>VirtI/O 界面</td>
-<td>/dev/vd [a-p] (用於虛擬機器內)</td>
+<td>VirtI&#x2F;O界面</td>
+<td>&#x2F;dev&#x2F;vd[a-p] (用於虛擬機器內)</td>
 </tr>
 <tr>
 <td>軟碟機</td>
-<td>/dev/fd[0-1]</td>
+<td>&#x2F;dev&#x2F;fd[0-1]</td>
 </tr>
 <tr>
 <td>印表機</td>
-<td>/dev/lp [0-2] (25 針印表機) /dev/usb/lp [0-15] (USB 介面)</td>
+<td>&#x2F;dev&#x2F;lp[0-2] (25針印表機) &#x2F;dev&#x2F;usb&#x2F;lp[0-15] (USB 介面)</td>
 </tr>
 <tr>
 <td>滑鼠</td>
-<td>/dev/input/mouse [0-15] (通用) /dev/psaux (PS/2 界面) /dev/mouse (當前滑鼠)</td>
+<td>&#x2F;dev&#x2F;input&#x2F;mouse[0-15] (通用) &#x2F;dev&#x2F;psaux (PS&#x2F;2界面) &#x2F;dev&#x2F;mouse (當前滑鼠)</td>
 </tr>
 <tr>
-<td>CDROM/DVDROM</td>
-<td>/dev/scd [0-1] (通用) /dev/sr [0-1] (通用，CentOS 較常見) /dev/cdrom (當前 CDROM)</td>
+<td>CDROM&#x2F;DVDROM</td>
+<td>&#x2F;dev&#x2F;scd[0-1] (通用) &#x2F;dev&#x2F;sr[0-1] (通用，CentOS 較常見) &#x2F;dev&#x2F;cdrom (當前 CDROM)</td>
 </tr>
 <tr>
 <td>磁帶機</td>
-<td>/dev/ht0 (IDE 界面) /dev/st0 (SATA/SCSI 界面) /dev/tape (當前磁帶)</td>
+<td>&#x2F;dev&#x2F;ht0 (IDE 界面) &#x2F;dev&#x2F;st0 (SATA&#x2F;SCSI界面) &#x2F;dev&#x2F;tape (當前磁帶)</td>
 </tr>
 <tr>
-<td>IDE 硬碟機</td>
-<td>/dev/hd [a-d] (舊式系統才有)</td>
+<td>IDE硬碟機</td>
+<td>&#x2F;dev&#x2F;hd[a-d] (舊式系統才有)</td>
 </tr>
-</tbody>
-</table>
-<p>一般来说，支持 SATA 的磁盘会以 /dev/sd [a-p] 来命名，而虚拟磁盘（如在虚拟机内的磁盘）会以 /dev/vd [a-p] 来命名。<strong>那么假设主板上安装了多个 SATA 磁盘 / USB 硬盘，如何决定他们的命名顺序呢？答案是以侦测到的顺序来决定，先侦测到的磁盘会有更 “前” 的名字。</strong></p>
+</tbody></table>
+<p>一般来说，支持SATA的磁盘会以&#x2F;dev&#x2F;sd[a-p]来命名，而虚拟磁盘（如在虚拟机内的磁盘）会以&#x2F;dev&#x2F;vd[a-p]来命名。<strong>那么假设主板上安装了多个SATA磁盘&#x2F;USB硬盘，如何决定他们的命名顺序呢？答案是以侦测到的顺序来决定，先侦测到的磁盘会有更“前”的名字。</strong></p>
 <blockquote>
 <p>例題：</p>
-<p>如果你的 PC 上面有兩個 SATA 磁碟以及一個 USB 磁碟，而主機板上面有六個 SATA 的插槽。這兩個 SATA 磁碟分別安插在主機板上的 SATA1, SATA5 插槽上， 請問這三個磁碟在 Linux 中的裝置檔名為何？</p>
+<p>如果你的PC上面有兩個SATA磁碟以及一個USB磁碟，而主機板上面有六個SATA的插槽。這兩個SATA磁碟分別安插在主機板上的SATA1, SATA5插槽上， 請問這三個磁碟在Linux中的裝置檔名為何？</p>
 <p>答：</p>
 <p>由於是使用偵測到的順序來決定裝置檔名，並非與實際插槽代號有關，因此裝置的檔名如下：</p>
 <ol>
-<li>SATA1 插槽上的檔名：/dev/sda</li>
-<li>SATA5 插槽上的檔名：/dev/sdb</li>
-<li>USB 磁碟 (開機完成後才被系統捉到)：/dev/sdc</li>
+<li>SATA1插槽上的檔名：&#x2F;dev&#x2F;sda</li>
+<li>SATA5插槽上的檔名：&#x2F;dev&#x2F;sdb</li>
+<li>USB磁碟(開機完成後才被系統捉到)：&#x2F;dev&#x2F;sdc</li>
 </ol>
 </blockquote>
 <p>那假如一个磁盘被分成多个区，那么每个区的命名又该如何？</p>
-<img src="../../pics/image-20240310202619263.png" alt="image-20240310202619263" style="zoom:50%;" />
+<p><img src="/./Linux%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20240310205343616.png" alt="image-20240310205343616"></p>
 
   </div>
   
