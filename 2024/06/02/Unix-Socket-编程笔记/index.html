@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="PaperWings" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      Unix Socket 编程笔记 
+      
+      
+    
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:400,400italic,600|Roboto+Mono" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+
+
+  
+
+  
+    
+<link rel="stylesheet" href="/css/post.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <a href="/">LEEDOM</a>
+</div>
+
+
+      <p class="links">
+  
+    <a title="archives" target="" href="/archives/">
+      <i class="iconfont icon-bookmark"></i>
+    </a>
+  
+    <a title="github" target="_blank" href="https://github.com/leedom92/hexo-theme-leedom">
+      <i class="iconfont icon-github"></i>
+    </a>
+  
+    <a title="email" target="" href="">
+      <i class="iconfont icon-envelope"></i>
+    </a>
+  
+    <a title="facebook" target="" href="">
+      <i class="iconfont icon-facebooksquare"></i>
+    </a>
+  
+    <a title="twitter" target="" href="">
+      <i class="iconfont icon-twitter"></i>
+    </a>
+  
+    <a title="wechat" target="" href="">
+      <i class="iconfont icon-wechat"></i>
+    </a>
+  
+    <a title="weibo" target="" href="">
+      <i class="iconfont icon-weibo"></i>
+    </a>
+  
+    <a title="rss" target="_blank" href="/atom.xml">
+      <i class="iconfont icon-rss"></i>
+    </a>
+  
+</p>
+
+
+      <div class="main">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+
+<div class="post">
+  <h3 class="date">
+    Jun 02, 2024
+  </h3>
+  <h1>
+    Unix Socket 编程笔记
+  </h1>
+  <div class="content markdown-body">
+    <p>最近工作上用到了 Unix Socket 编程，学到了很多新东西，特地在此记录一下！</p>
+<h1 id="概念介绍"><a class="markdownIt-Anchor" href="#概念介绍">#</a> 概念介绍</h1>
+<p>首先 Socket 是两个进程之间通信最底层的结构，所有通信协议，如 TCP 和 UDP 都基于 Socket 之上。这里的两个进程可以是一台主机上的不同进程，也可以是两台主机上，也就是客户端和服务器之间的两个进程。两个进程分别叫做客户端和服务端，他们初始化 Socket 的流程是不一样的，当然功能也不一样。客户端可以向服务端发送消息，而服务端接收到消息后根据客户端的需要返回有用的信息。接下来来看看在编程中如何做到这些吧。</p>
+<h1 id="服务端"><a class="markdownIt-Anchor" href="#服务端">#</a> 服务端</h1>
+<p>首先我们需要创建一个服务器端的 socket，使用 socket 函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">socket</span><span class="params">(<span class="type">int</span> domain, <span class="type">int</span> type, <span class="type">int</span> protocol)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>让我们一行一行解释：</p>
+<p>首先要保证引入了 <code>socket.h</code>  头文件，才能调用提供的接口。socket 函数是客户端以及服务端都需要用到的方法，作用是创建一个套接字，其类型为整型，创建的套接字是一个文件描述符，唯一代表了服务器，并在之后的操作中会用到。下面依次介绍各个参数：</p>
+<ul>
+<li><code>domain</code> ：说明了该套接字将要作用的域，包括 Unix 域（两个进程都在同一个主机上），以及网络域（两个进程在两个不同的主机上）。一般使用宏来指定，分别是 <code>AF_UNIX</code>  和 <code>AF_INET</code> 。</li>
+<li><code>type</code> ：指定如何传递数据包。有两种最常见的类型，即 <code>SOCK_STREAM</code>  和 <code>SOCK_DATAGRAM</code> ，分别代表以流形式传输数据以及以数据报的形式传输数据。以流形式传输的信息保证了可靠以及有序的特点，而以数据报传输的数据是无序的，不可靠的。对于要精确地传递某种信息，例如账号、密码等，必须要选择流形式的数据。通信协议 TCP 和 UDP 就分别对应这两个类型。</li>
+<li><code>protocol</code> ：为套接字指定一种协议，一般使用默认值 <code>0</code>  即可</li>
+</ul>
+<p>下面是一个例子，使用了 <code>socket</code>  函数创建了一个基于 UNIX，以流形式传输数据，且协议为默认的套接字：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> server_socket = <span class="built_in">socket</span>(AF_UNIX, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// failed to create a socket</span></span><br><span class="line">    <span class="keyword">if</span> (server_socket &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>正常创建出的套接字总是大于 0，假如其值为 - 1，那么说明创建失败，此时直接退出程序。</p>
+<p>接下来，我们需要 “绑定” 这个新创建的套接字到一个 “地址” 上。为什么要绑定地址？很简单，假如要和另外一个进程进行通信，你必须知道对方的地址呀！现在我们要做的，就是表明服务器的地址是什么。对于 UNIX 套接字来说，它是一个指向一个特殊文件的路径，这个特殊文件是一个端点，通俗地讲就是两个进程间的 “碰头点”。（对于网络套接字来说，这个地址就是我们熟知的 IP 地址和端口号。）</p>
+<p>我们使用 bind 函数来做到以上所说：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">bind</span><span class="params">(<span class="type">int</span> sockfd, <span class="type">const</span> <span class="keyword">struct</span> sockaddr *addr, <span class="type">socklen_t</span> addrlen)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>同样的，我们还是解释一下上述参数：</p>
+<ul>
+<li><code>sockfd</code> ：即我们用 <code>socket</code>  函数所创建的套接字，它是一个文件描述符</li>
+<li><code>addr</code> ：是一个 <code>sockaddr</code>  的结构体，里面的成员定义了地址等信息</li>
+<li><code>addrlen</code> ：顾名思义，是以上结构体的所占用的大小（注意不是地址字符串的长度）</li>
+</ul>
+<p>对于不同的套接字（AF_UNIX or AF_INET）这里要用到的 sockaddr 的结构体是不一样的，并且在作为参数时需要重新 cast。下面是一个例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/un.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">sockaddr_un</span> server_address;</span><br><span class="line">server_address.sun_family = AF_UNIX;</span><br><span class="line"><span class="built_in">strcpy</span>(server_address.sun_path, <span class="string">&quot;/tmp/socket_server&quot;</span>);</span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">bind</span>(server_socket, <span class="built_in">reinterpret_cast</span>&lt;<span class="keyword">struct</span> sockaddr *&gt;(&amp;server_address), <span class="built_in">sizeof</span>(server_address)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们首先定义了一个基于 UNIX 的地址结构体 <code>sockaddr_un</code> ，其中的成员 <code>sun_family</code>  再次确定这是基于 UNIX 编程的结构体（网络编程有不同的结构体 <code>sockaddr_in</code> ），成员 <code>sun_path</code>  指定了一个地址，以字符数组来表示。在调用 bind 函数时，我们将 <code>server_address</code>  重新 cast 为正确的结构体，这么做是为了欺骗编译器。bind 函数的返回值告诉我们绑定操作是否成功，若小于 0 则代表绑定失败。</p>
+<p>下一步是使用 <code>listen</code>  函数使得套接字进入监听状态：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">listen</span><span class="params">(<span class="type">int</span> sockfd, <span class="type">int</span> backlog)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>参数解释：</p>
+<ul>
+<li>sockfd：还是我们创建的套接字</li>
+<li>backlog：指定了最多能够处理多少个客户端</li>
+</ul>
+<p>当一个套接字被置于监听状态后，内核会维护两个队列：</p>
+<ul>
+<li><strong>未完成连接队列</strong>：包含那些已经完成了三次握手但还没有被应用层接受的连接。</li>
+<li><strong>已完成连接队列</strong>：包含那些已被应用层调用 <code>accept</code>  函数处理的连接。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">listen</span>(server_socket, <span class="number">20</span>) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后一步，那就是去接受来自客户端的连接啦～我们使用 accept 函数去处理这件事，注意在有客户端连接之前，这个函数会始终阻塞。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">accept</span><span class="params">(<span class="type">int</span> sockfd, <span class="keyword">struct</span> sockaddr* addr, <span class="type">socklen_t</span> addrlen)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>这是非常关键的一步，我们展开参数讲讲：</p>
+<ul>
+<li><code>sockfd</code> ：仍然是我们之前创建的套接字</li>
+<li><code>addr</code> ：之前已经定义过地址，为什么这里还要定义一个呢？这是因为这个地址是为客户端准备的，也就是说这个地址即将存放与服务端连接的地址。</li>
+<li>addrlen：还是和之前一样，表示结构体的长度</li>
+</ul>
+<p>参数看起来平平无奇，但是 accept 即将返回的是一个新的 socket，后续的通信将会用到这个新的 socket，而不是之前一开始创建的 server_socket。如果我们不关心客户端的地址，直接拿 <code>nullptr</code>  代替即可！</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> comm_socket = <span class="built_in">accept</span>(server_socket, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);</span><br><span class="line"><span class="keyword">if</span> (comm_socket &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>好了，现在连接建立了，是时候接收和发送信息了！我们分别使用 <code>recv</code>  和 <code>send</code>  函数来接收和发送信息。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> buffer[<span class="number">1024</span>];</span><br><span class="line"><span class="type">int</span> read_size = <span class="built_in">recv</span>(comm_socket, buffer, <span class="built_in">sizeof</span>(buffer), <span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span> (read_size &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br><span class="line">buffer[read_size] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line"><span class="type">int</span> write_size = <span class="built_in">send</span>(comm_socket, buffer, read_size, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span> (write_size &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不免看出，这些函数都有着浓浓的 C 语言味。不论是接收还是发送消息，我们需要提前创建一个字符数组，其大小代表一次最大可以接受多长的信息。再次注意，我们使用了 <code>accept</code>  函数返回的套接字，而不是一开始的套接字。这里，我们将接收到的消息原封不动地发送回给客户端。</p>
+<p>整体代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/un.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> server_socket = <span class="built_in">socket</span>(AF_UNIX, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// failed to create a socket</span></span><br><span class="line">    <span class="keyword">if</span> (server_socket &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">sockaddr_un</span> server_address;</span><br><span class="line">    server_address.sun_family = AF_UNIX;</span><br><span class="line">    <span class="built_in">strcpy</span>(server_address.sun_path, <span class="string">&quot;/tmp/socket_server&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">bind</span>(server_socket, <span class="built_in">reinterpret_cast</span>&lt;<span class="keyword">struct</span> sockaddr *&gt;(&amp;server_address), <span class="built_in">sizeof</span>(server_address)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">listen</span>(server_socket, <span class="number">20</span>) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> comm_socket = <span class="built_in">accept</span>(server_socket, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);</span><br><span class="line">    <span class="keyword">if</span> (comm_socket &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">char</span> buffer[<span class="number">1024</span>];</span><br><span class="line">    <span class="type">int</span> read_size = <span class="built_in">recv</span>(comm_socket, buffer, <span class="built_in">sizeof</span>(buffer), <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (read_size &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    buffer[read_size] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">    <span class="type">int</span> write_size = <span class="built_in">send</span>(comm_socket, buffer, read_size, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (write_size &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">close</span>(comm_socket);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+  </div>
+  
+    
+      <a id="older" class="blog-nav" href="/2024/03/10/Linux%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">OLDER&nbsp;&gt;</a>
+      
+        
+            
+</div>
+        <div class="footer">
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/leedom92/hexo-theme-leedom">Copyright © Leedom 2021</a>
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/leedom92/hexo-theme-leedom">Theme by Leedom | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-box">
+        <div class="search-title">
+          <!-- <span class="search-icon-input">
+            <a href="javascript: void(0)">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </span> -->
+          
+            <input type="text" class="search-input" id="search-input" placeholder="$ grep...">
+          
+          <span class="search-close-icon" id="search-close-icon">
+            <a href="javascript: void(0)">
+              <i class="iconfont icon-close"></i>
+            </a>
+          </span>
+        </div>
+        <div class="search-result" id="search-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    // inputArea.onclick = function() {
+    //   getSearchFile()
+    //   this.onclick = null
+    // }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        inputArea.focus()
+        getSearchFile()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'><span></ul>";
+      // $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'><h2>" + orig_data_title + "</h2></a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<h3 class=\"search-result-abstract\">" + match_content + "...</h3>"
+                }
+                str += "<hr></li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/leedom92/hexo-theme-leedom#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  </body>
+</html>
